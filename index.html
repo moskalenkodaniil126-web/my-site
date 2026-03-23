@@ -1,1 +1,225 @@
-index.html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<title>Для тебя ❤️</title>
+
+<style>
+body {
+    margin: 0;
+    font-family: Arial, sans-serif;
+    text-align: center;
+    color: white;
+    overflow: hidden;
+    background: black;
+}
+
+/* Сердца */
+.heart {
+    position: fixed;
+    bottom: -50px;
+    color: pink;
+    font-size: 20px;
+    animation: floatUp linear infinite;
+}
+
+@keyframes floatUp {
+    from { transform: translateY(0); opacity: 1; }
+    to { transform: translateY(-110vh); opacity: 0; }
+}
+
+/* Конфетти */
+.confetti {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    background: red;
+    top: -10px;
+    animation: fall linear forwards;
+}
+
+@keyframes fall {
+    to {
+        transform: translateY(110vh) rotate(360deg);
+    }
+}
+
+.page {
+    display: none;
+    margin-top: 20%;
+    animation: fade 0.5s;
+}
+
+@keyframes fade {
+    from {opacity: 0;}
+    to {opacity: 1;}
+}
+
+.active {
+    display: block;
+}
+
+button {
+    padding: 15px 25px;
+    margin: 10px;
+    font-size: 18px;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    background: pink;
+}
+
+/* Победы */
+.score {
+    position: fixed;
+    top: 10px;
+    right: 15px;
+    font-size: 18px;
+}
+
+/* Субтитры */
+.subtitle {
+    position: fixed;
+    bottom: 30px;
+    width: 100%;
+    text-align: center;
+    font-size: 22px;
+    color: black;
+    background: rgba(255,255,255,0.7);
+    padding: 10px;
+    display: none;
+}
+
+/* +1 эффект */
+.plus {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 40px;
+    color: gold;
+    animation: pop 0.7s forwards;
+}
+
+@keyframes pop {
+    0% {opacity: 0; transform: scale(0.5) translate(-50%, -50%);}
+    50% {opacity: 1; transform: scale(1.3) translate(-50%, -50%);}
+    100% {opacity: 0; transform: scale(1) translate(-50%, -50%);}
+}
+</style>
+</head>
+
+<body>
+
+<audio id="music" loop>
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3">
+</audio>
+
+<div class="score">Победы: <span id="score">0</span> 🏆</div>
+
+<!-- МЕНЮ -->
+<div class="page active" id="menu">
+    <h1>Готовы? 😎🥵</h1>
+    <button onclick="start()">Далее</button>
+</div>
+
+<div class="page" id="page1">
+    <h1>Ты самая симпатичная девушка в мире? 😘</h1>
+    <button onclick="nextPage(2)">Да</button>
+    <button onclick="nextPage(2)">Да</button>
+</div>
+
+<div class="page" id="page2">
+    <h1>Это девушка с самым приятным голосом? 💖</h1>
+    <button onclick="nextPage(3)">Да</button>
+    <button onclick="nextPage(3)">Да</button>
+</div>
+
+<div class="page" id="page3">
+    <h1>Это у тебя самые красивые глаза? 😍</h1>
+    <button onclick="nextPage(4)">Да</button>
+    <button onclick="nextPage(4)">Конечно</button>
+</div>
+
+<div class="page" id="page4">
+    <h1>Это же ты, у которой самый лучший маникюр на планете? 💋</h1>
+    <button onclick="nextPage(5)">Да</button>
+    <button onclick="nextPage(5)">Да</button>
+</div>
+
+<div class="page" id="page5">
+    <h1>ДА ТЫ ПРОСТО КУКОЛКА, ТЫ ШИКАРНАЯ!!!!!! 👑</h1>
+    <h2>ТЫ КОРОЛЕВА ЭТОГО МИРА, САМАЯ ЛУЧШАЯ И НЕПОВТОРИМАЯ 💖</h2>
+</div>
+
+<div class="subtitle" id="subtitle">
+    Данька + Викуля = ❤
+</div>
+
+<script>
+let score = 0;
+
+function start() {
+    document.getElementById("music").play();
+    document.getElementById("menu").classList.remove("active");
+    document.getElementById("page1").classList.add("active");
+}
+
+function showPlus() {
+    const plus = document.createElement("div");
+    plus.className = "plus";
+    plus.innerText = "+1 🏆";
+    document.body.appendChild(plus);
+
+    setTimeout(() => plus.remove(), 700);
+}
+
+function nextPage(pageNumber) {
+    score++;
+    document.getElementById("score").innerText = score;
+
+    showPlus();
+
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page' + pageNumber).classList.add('active');
+
+    if (pageNumber === 5) {
+        setTimeout(() => {
+            document.getElementById('subtitle').style.display = 'block';
+            createConfetti();
+        }, 2000);
+    }
+}
+
+/* Сердца */
+function createHeart() {
+    const heart = document.createElement("div");
+    heart.className = "heart";
+    heart.innerHTML = "❤";
+
+    heart.style.left = Math.random() * 100 + "vw";
+    heart.style.fontSize = (15 + Math.random() * 25) + "px";
+    heart.style.animationDuration = (5 + Math.random() * 5) + "s";
+
+    document.body.appendChild(heart);
+    setTimeout(() => heart.remove(), 10000);
+}
+setInterval(createHeart, 300);
+
+/* Конфетти */
+function createConfetti() {
+    for (let i = 0; i < 80; i++) {
+        const c = document.createElement("div");
+        c.className = "confetti";
+        c.style.left = Math.random() * 100 + "vw";
+        c.style.background = `hsl(${Math.random()*360},100%,50%)`;
+        c.style.animationDuration = (2 + Math.random() * 3) + "s";
+        document.body.appendChild(c);
+
+        setTimeout(() => c.remove(), 5000);
+    }
+}
+</script>
+
+</body>
+</html>
